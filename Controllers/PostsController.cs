@@ -9,17 +9,13 @@ namespace Blog.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostsController : ControllerBase
+    public class PostsController(IPostsService postsService) : ControllerBase
     {
-        private readonly PostsService _postsService;
-        public PostsController()
-        {
-            _postsService = new PostsService();
-        }
+
         [HttpGet]
         public async Task<ActionResult<List<Post>>> GetPost()
         {
-            var posts = await _postsService.GetAllPosts();
+            var posts = await postsService.GetAllPosts();
             return Ok(posts);
         }
 
@@ -27,7 +23,7 @@ namespace Blog.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetPosts(int id)
         {
-            var post = await _postsService.GetPost(id);
+            var post = await postsService.GetPost(id);
             if (post == null)
             {
                 return NotFound();
@@ -38,7 +34,7 @@ namespace Blog.Controllers
         [HttpPost]
         public async Task<ActionResult<Post>> CreatePost(Post post)
         {
-            await _postsService.CreatePost(post);
+            await postsService.CreatePost(post);
             return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
         }
 
@@ -49,7 +45,7 @@ namespace Blog.Controllers
             {
                 return BadRequest();
             }
-            var updatedPost = await _postsService.UpdatePost(id, post);
+            var updatedPost = await postsService.UpdatePost(id, post);
             if (updatedPost == null)
             {
                 return NotFound();

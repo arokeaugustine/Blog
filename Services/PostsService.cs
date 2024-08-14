@@ -2,7 +2,7 @@
 
 namespace Blog.Services
 {
-    public class PostsService
+    public class PostsService : IPostsService
     {
         private static readonly List<Post> AllPosts = new ();
 
